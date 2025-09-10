@@ -1,0 +1,79 @@
+[gd_scene load_steps=10 format=3 uid="uid://cdyng8lxh4ora"]
+
+[ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://n7eyvchldvs0" path="res://player.gd" id="2_h2yge"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+albedo_texture = ExtResource("1_0xm2m")
+uv1_triplanar = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lquwl"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7mycd"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_0xm2m"]
+bounce = 0.15
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_h2yge"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_texture = ExtResource("1_0xm2m")
+
+[sub_resource type="SphereMesh" id="SphereMesh_1bvp3"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(25.7246, 1, 19.5518)
+material = SubResource("StandardMaterial3D_1bvp3")
+
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
+top_level = true
+script = ExtResource("2_h2yge")
+cam_pivot = NodePath("CamPivot")
+ball = NodePath("Ball")
+cam_sensitivity = 0.1
+acceleration = 0.5
+ball_acceleration = 2.0
+speed = 5.0
+ball_speed = 10.0
+jump_speed = 7.0
+ball_jump_speed = 100.0
+gravity = 0.5
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="Player"]
+mesh = SubResource("CapsuleMesh_lquwl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_7mycd")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player"]
+remote_path = NodePath("..")
+
+[node name="CamPivot" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
+top_level = true
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Player/CamPivot"]
+spring_length = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="Player/CamPivot/SpringArm3D"]
+
+[node name="Ball" type="RigidBody3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
+top_level = true
+physics_material_override = SubResource("PhysicsMaterial_0xm2m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Ball"]
+shape = SubResource("SphereShape3D_h2yge")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/Ball"]
+material_override = SubResource("StandardMaterial3D_0xm2m")
+mesh = SubResource("SphereMesh_1bvp3")
+skeleton = NodePath("")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player/Ball"]
+remote_path = NodePath("..")
