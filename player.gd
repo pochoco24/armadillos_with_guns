@@ -6,10 +6,10 @@ extends CharacterBody3D
 @onready var remote_transform_3d: RemoteTransform3D = $RemoteTransform3D
 
 @export var cam_sensitivity: float
+@export var cam_follow_speed: float
 @export var acceleration: float
 @export var ball_acceleration: float
 @export var speed: float
-@export var ball_speed: float
 @export var jump_speed: float
 @export var ball_jump_speed: float
 @export var gravity: float
@@ -31,12 +31,14 @@ func _physics_process(delta: float) -> void:
 	# Rotate with camera
 	input_dir = input_dir.rotated(-cam_pivot.rotation.y)
 	
+	velocity_flat = Vector2(velocity.x, velocity.z)
+	
 	if ball_mode:
 		var input_dir_3d = Vector3(input_dir.x, 0.0, input_dir.y)
 		ball.apply_torque(Vector3.UP.cross(input_dir_3d) * ball_acceleration)
 		
 		if Input.is_action_just_pressed("jump"):
-			ball.apply_force(Vector3.UP * ball_jump_speed)
+			ball.apply_impulse(Vector3.UP * ball_jump_speed)
 		
 	else:
 		velocity_flat = velocity_flat.move_toward(input_dir * speed, acceleration)
@@ -51,18 +53,39 @@ func _physics_process(delta: float) -> void:
 	
 	
 	move_and_slide()
+	update_camera_position()
+
+
+func update_camera_position():
+	if ball_mode:
+		cam_pivot.position = cam_pivot.position.lerp(ball.position, cam_follow_speed)
+	else:
+		cam_pivot.position = cam_pivot.position.lerp(position, cam_follow_speed)
 
 
 func set_ball_mode(enabled: bool):
+	if enabled == ball_mode:
+		return
+	
 	player_mesh.visible = not enabled
 	set_collision_layer_value(1, not enabled)
 	set_collision_mask_value(1, not enabled)
+	set_collision_mask_value(2, not enabled)
 	
-	if enabled:
+	ball.visible = enabled
+	ball.set_collision_layer_value(1, enabled)
+	ball.set_collision_mask_value(1, enabled)
+	ball.freeze = not enabled
+	
+	if not enabled:
 		position = ball.position
+		velocity = ball.linear_velocity
 		
 	else:
 		ball.position = position
+		ball.linear_velocity = velocity
+	
+	ball_mode = enabled
 
 
 func _input(event: InputEvent) -> void:
@@ -73,7 +96,7 @@ func _input(event: InputEvent) -> void:
 		cam_pivot.rotation_degrees.y -= event.relative.x * cam_sensitivity
 	
 	# Ball mode
-	ball_mode = Input.is_action_pressed("ball_mode")
+	set_ball_mode(Input.is_action_pressed("ball_mode"))
 	
 	# Game exit
 	if event.is_action_pressed("ui_cancel"):
