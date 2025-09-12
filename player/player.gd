@@ -4,6 +4,10 @@ extends CharacterBody3D
 @export var current_state: PlayerState
 
 @export var cam_pivot: Node3D
+@export var ball: RigidBody3D
+@export var mesh: MeshInstance3D
+@export var jump_buffer: Timer
+@export var coyote_time: Timer
 
 @export var gravity: float = 0.1
 @export var acceleration: float = 0.1
@@ -13,11 +17,15 @@ var states: Dictionary[String, PlayerState]
 
 
 func _ready() -> void:
+	# Get states
 	for child in states_node.get_children():
 		if child is PlayerState:
 			states[child.name] = child
 			child.transitioned.connect(_on_state_transitioned)
 			child.player = self
+	
+	# Lock mouse
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func _on_state_transitioned(new_state_name: String):
@@ -43,3 +51,7 @@ func _physics_process(delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if current_state:
 		current_state.input_update(event)
+	
+	# Exit game
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().quit()

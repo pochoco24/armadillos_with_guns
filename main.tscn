@@ -1,13 +1,14 @@
-[gd_scene load_steps=19 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=20 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
-[ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player.gd" id="2_272bh"]
+[ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
 [ext_resource type="Script" uid="uid://cjnokk3bv3d2c" path="res://cam_pivot.gd" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://bq5t5v4jynd1h" path="res://player/ball.gd" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://b46x2wbgv0s8s" path="res://player/states/idle.gd" id="4_7mycd"]
 [ext_resource type="Script" uid="uid://dtiwo1avy75s1" path="res://player/states/falling.gd" id="5_5vw27"]
 [ext_resource type="Script" uid="uid://qj43j33ouuei" path="res://player/states/jumping.gd" id="5_272bh"]
 [ext_resource type="Script" uid="uid://fbmqt1ut2sxi" path="res://player/states/run.gd" id="6_5vw27"]
+[ext_resource type="Script" uid="uid://cvg06bgvikam0" path="res://player/states/ball.gd" id="7_kek77"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -70,14 +71,21 @@ use_collision = true
 size = Vector3(25.7246, 1.81812, 19.5518)
 material = SubResource("StandardMaterial3D_1bvp3")
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("states_node", "cam_pivot")]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("states_node", "current_state", "cam_pivot", "mesh", "jump_buffer", "coyote_time")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
 top_level = true
 collision_mask = 3
 floor_constant_speed = true
 script = ExtResource("2_272bh")
 states_node = NodePath("States")
+current_state = NodePath("States/Idle")
 cam_pivot = NodePath("CamPivot")
+mesh = NodePath("Mesh")
+jump_buffer = NodePath("JumpBuffer")
+coyote_time = NodePath("CoyoteTime")
+gravity = 0.5
+acceleration = 1.0
+speed = 3.0
 
 [node name="States" type="Node" parent="Player"]
 
@@ -87,6 +95,7 @@ metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="Jumping" type="Node" parent="Player/States"]
 script = ExtResource("5_272bh")
+jump_speed = 10.0
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="Falling" type="Node" parent="Player/States"]
@@ -97,7 +106,14 @@ metadata/_custom_type_script = "uid://xaghdmtee3di"
 script = ExtResource("6_5vw27")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="PlayerMesh" type="MeshInstance3D" parent="Player"]
+[node name="Ball" type="Node" parent="Player/States" node_paths=PackedStringArray("ball")]
+script = ExtResource("7_kek77")
+ball = NodePath("../../Ball")
+acceleration = 15.0
+jump_speed = 15.0
+metadata/_custom_type_script = "uid://xaghdmtee3di"
+
+[node name="Mesh" type="MeshInstance3D" parent="Player"]
 mesh = SubResource("CapsuleMesh_lquwl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
@@ -120,13 +136,17 @@ spring_length = 4.0
 [node name="Ball" type="RigidBody3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 3.44522)
 top_level = true
-collision_mask = 3
+visible = false
+collision_layer = 0
+collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_0xm2m")
 gravity_scale = 4.0
+freeze = true
 contact_monitor = true
 max_contacts_reported = 1
+angular_damp = 1.0
 script = ExtResource("3_h2yge")
-max_floor_dot = 0.99
+max_floor_dot = 0.707
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Ball"]
 shape = SubResource("SphereShape3D_h2yge")
@@ -141,4 +161,5 @@ wait_time = 0.1
 one_shot = true
 
 [node name="CoyoteTime" type="Timer" parent="Player"]
+wait_time = 0.1
 one_shot = true

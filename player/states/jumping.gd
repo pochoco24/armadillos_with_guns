@@ -1,10 +1,11 @@
-extends PlayerState
+extends BipedalState
 
 @export var jump_speed: float
 
 
 func enter():
-	player.velocity.y += jump_speed
+	player.velocity.y = jump_speed
+	player.coyote_time.stop()
 
 
 func physics_update(delta: float):
@@ -27,3 +28,5 @@ func physics_update(delta: float):
 	
 	if player.velocity.y <= 0.0:
 		change_state("Falling")
+	
+	super(delta)

@@ -1,14 +1,13 @@
-extends PlayerState
+extends BipedalState
 
 
 func input_update(event: InputEvent) -> void:
 	if Input.get_vector("left", "right", "up", "down") == Vector2.ZERO:
 		change_state("Idle")
-	elif event.is_action_pressed("ball_mode"):
-		change_state("Ball")
 	elif event.is_action_pressed("jump"):
-		if player.is_on_floor():
-			change_state("Jumping")
+		change_state("Jumping")
+	else:
+		super(event)
 
 
 func physics_update(delta: float):
@@ -30,4 +29,7 @@ func physics_update(delta: float):
 	player.move_and_slide()
 	
 	if not player.is_on_floor():
+		player.coyote_time.start()
 		change_state("Falling")
+	
+	super(delta)
