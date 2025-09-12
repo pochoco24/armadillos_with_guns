@@ -4,6 +4,8 @@ extends PlayerState
 @export var acceleration: float
 @export var jump_speed: float
 
+var was_on_floor = false
+
 
 func enter():
 	player.mesh.visible = false
@@ -56,14 +58,21 @@ func physics_update(delta):
 	
 	ball.apply_torque(Vector3.UP.cross(input_dir_3d) * acceleration)
 	
+	# Start Coyote Time
+	if ball.on_floor != was_on_floor:
+		if not ball.on_floor:
+			player.coyote_time.start()
+		was_on_floor = ball.on_floor
 	
-	
+	# Jump with Jump Buffer
 	if ball.on_floor and not player.jump_buffer.is_stopped():
 		ball.apply_impulse(Vector3.UP * jump_speed) # Jump
 		player.jump_buffer.stop()
+	# Jump on floor or Coyote Time
 	elif Input.is_action_just_pressed("jump"):
 		if ball.on_floor or not player.coyote_time.is_stopped():
 			ball.apply_impulse(Vector3.UP * jump_speed) # Jump
+			player.jump_buffer.stop()
 		else:
 			player.jump_buffer.start()
 	
