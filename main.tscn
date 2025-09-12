@@ -1,9 +1,13 @@
-[gd_scene load_steps=15 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=19 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
-[ext_resource type="Script" uid="uid://n7eyvchldvs0" path="res://player/player.gd" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player.gd" id="2_272bh"]
 [ext_resource type="Script" uid="uid://cjnokk3bv3d2c" path="res://cam_pivot.gd" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://bq5t5v4jynd1h" path="res://player/ball.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://b46x2wbgv0s8s" path="res://player/states/idle.gd" id="4_7mycd"]
+[ext_resource type="Script" uid="uid://dtiwo1avy75s1" path="res://player/states/falling.gd" id="5_5vw27"]
+[ext_resource type="Script" uid="uid://qj43j33ouuei" path="res://player/states/jumping.gd" id="5_272bh"]
+[ext_resource type="Script" uid="uid://fbmqt1ut2sxi" path="res://player/states/run.gd" id="6_5vw27"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -66,21 +70,32 @@ use_collision = true
 size = Vector3(25.7246, 1.81812, 19.5518)
 material = SubResource("StandardMaterial3D_1bvp3")
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball")]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("states_node", "cam_pivot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
 top_level = true
 collision_mask = 3
 floor_constant_speed = true
-script = ExtResource("2_h2yge")
+script = ExtResource("2_272bh")
+states_node = NodePath("States")
 cam_pivot = NodePath("CamPivot")
-ball = NodePath("Ball")
-acceleration = 0.5
-ball_acceleration = 10.0
-speed = 7.0
-jump_speed = 12.0
-ball_jump_speed = 15.0
-gravity = 0.5
-void_y_level = -40.0
+
+[node name="States" type="Node" parent="Player"]
+
+[node name="Idle" type="Node" parent="Player/States"]
+script = ExtResource("4_7mycd")
+metadata/_custom_type_script = "uid://xaghdmtee3di"
+
+[node name="Jumping" type="Node" parent="Player/States"]
+script = ExtResource("5_272bh")
+metadata/_custom_type_script = "uid://xaghdmtee3di"
+
+[node name="Falling" type="Node" parent="Player/States"]
+script = ExtResource("5_5vw27")
+metadata/_custom_type_script = "uid://xaghdmtee3di"
+
+[node name="Run" type="Node" parent="Player/States"]
+script = ExtResource("6_5vw27")
+metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="Player"]
 mesh = SubResource("CapsuleMesh_lquwl")
@@ -103,7 +118,7 @@ spring_length = 4.0
 [node name="Camera3D" type="Camera3D" parent="Player/CamPivot/SpringArm3D"]
 
 [node name="Ball" type="RigidBody3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 3.44522)
 top_level = true
 collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_0xm2m")
