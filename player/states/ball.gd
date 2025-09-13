@@ -22,6 +22,9 @@ func enter():
 	
 	ball.position = player.position
 	ball.linear_velocity = player.velocity
+	
+	player.cam_pivot.change_fov(90.0)
+	
 
 
 func exit():
@@ -38,6 +41,8 @@ func exit():
 	
 	player.position = ball.position
 	player.velocity = ball.linear_velocity
+	
+	player.cam_pivot.change_fov(player.cam_pivot.default_fov)
 
 
 func input_update(event: InputEvent):

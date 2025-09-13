@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=21 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://qj43j33ouuei" path="res://player/states/jumping.gd" id="5_272bh"]
 [ext_resource type="Script" uid="uid://fbmqt1ut2sxi" path="res://player/states/run.gd" id="6_5vw27"]
 [ext_resource type="Script" uid="uid://cvg06bgvikam0" path="res://player/states/ball.gd" id="7_kek77"]
+[ext_resource type="Script" uid="uid://col25iiwxqgvd" path="res://player/states/attack.gd" id="8_4c57u"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -71,7 +72,7 @@ use_collision = true
 size = Vector3(25.7246, 1.81812, 19.5518)
 material = SubResource("StandardMaterial3D_1bvp3")
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("states_node", "current_state", "cam_pivot", "ball", "mesh", "jump_buffer", "coyote_time", "shotgun_cooldown")]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("states_node", "current_state", "cam_pivot", "mesh", "jump_buffer", "coyote_time")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
 top_level = true
 collision_mask = 3
@@ -80,16 +81,12 @@ script = ExtResource("2_272bh")
 states_node = NodePath("States")
 current_state = NodePath("States/Idle")
 cam_pivot = NodePath("CamPivot")
-ball = NodePath("Ball")
 mesh = NodePath("Mesh")
 jump_buffer = NodePath("JumpBuffer")
 coyote_time = NodePath("CoyoteTime")
-shotgun_cooldown = NodePath("ShotgunCooldown")
 gravity = 0.5
 acceleration = 1.0
 speed = 3.0
-shotgun_recoil = 20.0
-ball_shotgun_recoil = 25.0
 
 [node name="States" type="Node" parent="Player"]
 
@@ -117,6 +114,10 @@ acceleration = 15.0
 jump_speed = 15.0
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
+[node name="Attack" type="Node" parent="Player/States"]
+script = ExtResource("8_4c57u")
+metadata/_custom_type_script = "uid://xaghdmtee3di"
+
 [node name="Mesh" type="MeshInstance3D" parent="Player"]
 mesh = SubResource("CapsuleMesh_lquwl")
 
@@ -129,7 +130,6 @@ top_level = true
 script = ExtResource("3_1bvp3")
 cam_sensitivity = 0.1
 cam_follow_speed = 0.5
-fov_tween_duration = 1.0
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Player/CamPivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.881146, 0, 0)
@@ -167,8 +167,4 @@ one_shot = true
 
 [node name="CoyoteTime" type="Timer" parent="Player"]
 wait_time = 0.1
-one_shot = true
-
-[node name="ShotgunCooldown" type="Timer" parent="Player"]
-wait_time = 0.5
 one_shot = true
