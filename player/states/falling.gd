@@ -7,6 +7,8 @@ func input_update(event: InputEvent):
 			change_state("Jumping")
 		else:
 			player.jump_buffer.start()
+	else:
+		super(event)
 
 
 func physics_update(delta: float):
