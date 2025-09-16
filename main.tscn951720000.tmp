@@ -176,11 +176,11 @@ mesh = SubResource("SphereMesh_1bvp3")
 skeleton = NodePath("")
 
 [node name="JumpBuffer" type="Timer" parent="Player"]
-wait_time = 10.0
+wait_time = 0.2
 one_shot = true
 
 [node name="CoyoteTime" type="Timer" parent="Player"]
-wait_time = 10.0
+wait_time = 0.5
 one_shot = true
 
 [node name="ShotgunCooldown" type="Timer" parent="Player"]
