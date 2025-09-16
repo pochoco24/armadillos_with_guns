@@ -1,12 +1,12 @@
 extends Node
 
-var states: Dictionary[String, PlayerState]
-var current_state: PlayerState
+var states: Dictionary[String, State]
+var current_state: State
 
 
 func _ready() -> void:
 	for child in get_children():
-		if child is PlayerState:
+		if child is State:
 			states[child.name] = child
 			child.transitioned.connect(_on_state_transitioned)
 
