@@ -1,4 +1,3 @@
-@tool
 extends Node3D
 
 signal ring_collided(collision_point: Vector3)
@@ -7,7 +6,6 @@ var raycasts: Array[RayCast3D]
 
 @export_group("Ring Properties")
 @export var raycast_count: int = 0
-@export_tool_button("Create Ring") var create_ring_action = create_ring
 
 
 func create_ring():

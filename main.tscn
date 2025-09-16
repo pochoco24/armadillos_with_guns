@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=23 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" uid="uid://fbmqt1ut2sxi" path="res://player/states/run.gd" id="6_5vw27"]
 [ext_resource type="Script" uid="uid://cvg06bgvikam0" path="res://player/states/ball.gd" id="7_kek77"]
 [ext_resource type="Script" uid="uid://xaghdmtee3di" path="res://player/player_state.gd" id="8_4c57u"]
+[ext_resource type="Script" uid="uid://bjgkpaqtq6enr" path="res://player/ledge_detection.gd" id="11_dg77c"]
+[ext_resource type="Script" uid="uid://cqmtmx618c1r7" path="res://player/spinning_ray_cast_3d.gd" id="11_efxa6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -58,6 +60,12 @@ environment = SubResource("Environment_7mycd")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.909058, 0)
 use_collision = true
 size = Vector3(25.7246, 1.81812, 19.5518)
+material = SubResource("StandardMaterial3D_1bvp3")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Map"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40543, 1.17215, -6.71507)
+use_collision = true
+size = Vector3(5.20465, 5.98053, 5.29237)
 material = SubResource("StandardMaterial3D_1bvp3")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="Map"]
@@ -179,3 +187,19 @@ wait_time = 0.5
 one_shot = true
 
 [node name="LedgeDetection" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("11_dg77c")
+
+[node name="SpinningRayCast3D" type="RayCast3D" parent="Player/LedgeDetection"]
+target_position = Vector3(1, 0, 0)
+hit_back_faces = false
+script = ExtResource("11_efxa6")
+resolution = 8
+
+[node name="FloorRayPivot" type="Node3D" parent="Player/LedgeDetection"]
+
+[node name="FloorRayCast" type="RayCast3D" parent="Player/LedgeDetection/FloorRayPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.934848, 1.04322, 0)
+hit_back_faces = false
+
+[connection signal="collided" from="Player/LedgeDetection/SpinningRayCast3D" to="Player/LedgeDetection" method="_on_spinning_ray_cast_3d_collided"]
