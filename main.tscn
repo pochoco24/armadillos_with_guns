@@ -4,11 +4,11 @@
 [ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
 [ext_resource type="Script" uid="uid://cjnokk3bv3d2c" path="res://cam_pivot.gd" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://bq5t5v4jynd1h" path="res://player/ball.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://bt3ijvv8tokii" path="res://player/player_state_machine.gd" id="3_w48qg"]
 [ext_resource type="Script" uid="uid://b46x2wbgv0s8s" path="res://player/states/idle.gd" id="4_7mycd"]
 [ext_resource type="Script" uid="uid://dtiwo1avy75s1" path="res://player/states/falling.gd" id="5_5vw27"]
 [ext_resource type="Script" uid="uid://qj43j33ouuei" path="res://player/states/jumping.gd" id="5_272bh"]
 [ext_resource type="Script" uid="uid://fbmqt1ut2sxi" path="res://player/states/run.gd" id="6_5vw27"]
-[ext_resource type="Script" uid="uid://cvg06bgvikam0" path="res://player/states/ball.gd" id="7_kek77"]
 [ext_resource type="Script" uid="uid://xaghdmtee3di" path="res://player/player_state.gd" id="8_4c57u"]
 [ext_resource type="Script" uid="uid://bjgkpaqtq6enr" path="res://player/ledge_detection.gd" id="11_dg77c"]
 [ext_resource type="Script" uid="uid://cqmtmx618c1r7" path="res://player/spinning_ray_cast_3d.gd" id="11_efxa6"]
@@ -81,14 +81,12 @@ use_collision = true
 size = Vector3(25.7246, 1.81812, 19.5518)
 material = SubResource("StandardMaterial3D_1bvp3")
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("states_node", "current_state", "cam_pivot", "ball", "mesh", "jump_buffer", "coyote_time", "shotgun_cooldown")]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball", "mesh", "jump_buffer", "coyote_time", "shotgun_cooldown")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
 top_level = true
 collision_mask = 3
 floor_constant_speed = true
 script = ExtResource("2_272bh")
-states_node = NodePath("States")
-current_state = NodePath("States/Idle")
 cam_pivot = NodePath("CamPivot")
 ball = NodePath("Ball")
 mesh = NodePath("Mesh")
@@ -101,33 +99,34 @@ speed = 3.0
 shotgun_recoil = 20.0
 ball_shotgun_recoil = 25.0
 
-[node name="States" type="Node" parent="Player"]
+[node name="PlayerStateMachine" type="Node" parent="Player" node_paths=PackedStringArray("player", "current_state")]
+script = ExtResource("3_w48qg")
+player = NodePath("..")
+current_state = NodePath("Idle")
+metadata/_custom_type_script = "uid://bhb5ov73j0yb7"
 
-[node name="Idle" type="Node" parent="Player/States"]
+[node name="Idle" type="Node" parent="Player/PlayerStateMachine"]
 script = ExtResource("4_7mycd")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Jumping" type="Node" parent="Player/States"]
+[node name="Jumping" type="Node" parent="Player/PlayerStateMachine"]
 script = ExtResource("5_272bh")
 jump_speed = 10.0
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Falling" type="Node" parent="Player/States"]
+[node name="Falling" type="Node" parent="Player/PlayerStateMachine"]
 script = ExtResource("5_5vw27")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Run" type="Node" parent="Player/States"]
+[node name="Run" type="Node" parent="Player/PlayerStateMachine"]
 script = ExtResource("6_5vw27")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Ball" type="Node" parent="Player/States" node_paths=PackedStringArray("ball")]
-script = ExtResource("7_kek77")
-ball = NodePath("../../Ball")
-acceleration = 15.0
-jump_speed = 15.0
+[node name="Ball" type="Node" parent="Player/PlayerStateMachine"]
+script = ExtResource("8_4c57u")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="LedgeGrab" type="Node" parent="Player/States"]
+[node name="LedgeGrab" type="Node" parent="Player/PlayerStateMachine"]
 script = ExtResource("8_4c57u")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
@@ -176,11 +175,11 @@ mesh = SubResource("SphereMesh_1bvp3")
 skeleton = NodePath("")
 
 [node name="JumpBuffer" type="Timer" parent="Player"]
-wait_time = 10.0
+wait_time = 0.1
 one_shot = true
 
 [node name="CoyoteTime" type="Timer" parent="Player"]
-wait_time = 10.0
+wait_time = 0.2
 one_shot = true
 
 [node name="ShotgunCooldown" type="Timer" parent="Player"]

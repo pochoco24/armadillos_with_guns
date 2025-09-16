@@ -11,17 +11,6 @@ func input_update(event: InputEvent) -> void:
 
 
 func physics_update(delta: float):
-	var velocity_flat = Vector2(player.velocity.x, player.velocity.z)
-	
-	velocity_flat = velocity_flat.move_toward(Vector2.ZERO, player.acceleration)
-	
-	player.velocity.x = velocity_flat.x
-	player.velocity.z = velocity_flat.y
-	
-	player.velocity.y -= player.gravity
-	
-	player.move_and_slide()
-	
 	if not player.is_on_floor():
 		player.coyote_time.start()
 		change_state("Falling")
