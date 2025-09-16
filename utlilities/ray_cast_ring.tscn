@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://76vc4j7dw543"]
+
+[ext_resource type="Script" uid="uid://d27uupq0jog0q" path="res://utlilities/ray_cast_ring.gd" id="1_t5hnd"]
+
+[node name="RayCastRing" type="Node3D"]
+script = ExtResource("1_t5hnd")
