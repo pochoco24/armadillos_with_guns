@@ -30,6 +30,7 @@ func enter():
 	
 	player.cam_pivot.change_fov(90.0)
 	
+	ball.on_floor = false
 	set_substate("Falling")
 
 

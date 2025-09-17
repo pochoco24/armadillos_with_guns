@@ -24,10 +24,12 @@ func _physics_process(delta: float) -> void:
 		if has_hit:
 			# Check which raycast hit closer
 			if (
-					closest_hit.distance_squared_to(global_position)
-					< get_collision_point().distance_squared_to(global_position)
+					get_collision_point().distance_squared_to(global_position)
+					< closest_hit.distance_squared_to(global_position)
 			):
 				closest_hit = get_collision_point()
+				hit_normal = get_collision_normal()
+				angle = rotation_degrees.y
 		else:
 			has_hit = true
 			closest_hit = get_collision_point()

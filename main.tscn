@@ -9,13 +9,13 @@
 [ext_resource type="Script" uid="uid://dtiwo1avy75s1" path="res://player/states/falling.gd" id="5_5vw27"]
 [ext_resource type="Script" uid="uid://qj43j33ouuei" path="res://player/states/jumping.gd" id="5_272bh"]
 [ext_resource type="Script" uid="uid://fbmqt1ut2sxi" path="res://player/states/run.gd" id="6_5vw27"]
-[ext_resource type="Script" uid="uid://xaghdmtee3di" path="res://player/states/player_state.gd" id="8_4c57u"]
 [ext_resource type="Script" uid="uid://dnk8b18dvrxgt" path="res://player/states/ball/ball_sub_state_machine.gd" id="8_w48qg"]
 [ext_resource type="Script" uid="uid://cv21ku1excwup" path="res://player/states/ball/rolling.gd" id="9_2cqfq"]
 [ext_resource type="Script" uid="uid://cl8gt4lexd38m" path="res://player/states/ball/jumping.gd" id="10_yaehf"]
 [ext_resource type="Script" uid="uid://bwfal6x03yuyj" path="res://player/states/ball/falling.gd" id="11_074og"]
 [ext_resource type="Script" uid="uid://bjgkpaqtq6enr" path="res://player/ledge_detection.gd" id="11_dg77c"]
 [ext_resource type="Script" uid="uid://cqmtmx618c1r7" path="res://player/spinning_ray_cast_3d.gd" id="11_efxa6"]
+[ext_resource type="Script" uid="uid://4su2t3tmg0nv" path="res://player/states/ledge_grab.gd" id="12_yaehf"]
 [ext_resource type="Script" uid="uid://di2cld85wx5pl" path="res://utlilities/debug_ui.gd" id="13_ycdy4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
@@ -68,9 +68,9 @@ size = Vector3(25.7246, 1.81812, 19.5518)
 material = SubResource("StandardMaterial3D_1bvp3")
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="Map"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40543, 1.17215, -6.71507)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40543, -1.2035805, -6.71507)
 use_collision = true
-size = Vector3(5.20465, 5.98053, 5.29237)
+size = Vector3(5.20465, 6.408722, 5.29237)
 material = SubResource("StandardMaterial3D_1bvp3")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="Map"]
@@ -115,12 +115,13 @@ metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="Jumping" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("5_272bh")
-jump_speed = 10.0
+jump_speed = 12.0
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="Falling" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("5_5vw27")
+ledge_grab_distance = 0.5
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
@@ -155,7 +156,7 @@ player = NodePath("../../..")
 metadata/_custom_type_script = "uid://tskxb1lhmh3"
 
 [node name="LedgeGrab" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
-script = ExtResource("8_4c57u")
+script = ExtResource("12_yaehf")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
@@ -164,21 +165,6 @@ mesh = SubResource("CapsuleMesh_lquwl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape3D_7mycd")
-
-[node name="CamPivot" type="Node3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
-top_level = true
-script = ExtResource("3_1bvp3")
-cam_sensitivity = 0.1
-cam_follow_speed = 0.5
-fov_tween_duration = 1.0
-
-[node name="SpringArm3D" type="SpringArm3D" parent="Player/CamPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.881146, 0, 0)
-collision_mask = 2
-spring_length = 4.0
-
-[node name="Camera3D" type="Camera3D" parent="Player/CamPivot/SpringArm3D"]
 
 [node name="Ball" type="RigidBody3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 3.44522)
@@ -204,6 +190,36 @@ material_override = SubResource("StandardMaterial3D_0xm2m")
 mesh = SubResource("SphereMesh_1bvp3")
 skeleton = NodePath("")
 
+[node name="CamPivot" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
+top_level = true
+script = ExtResource("3_1bvp3")
+cam_sensitivity = 0.1
+cam_follow_speed = 0.5
+fov_tween_duration = 1.0
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Player/CamPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.881146, 0, 0)
+collision_mask = 2
+spring_length = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="Player/CamPivot/SpringArm3D"]
+
+[node name="LedgeDetection" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("11_dg77c")
+
+[node name="SpinningRayCast3D" type="RayCast3D" parent="Player/LedgeDetection"]
+target_position = Vector3(1.5, 0, 0)
+script = ExtResource("11_efxa6")
+resolution = 8
+
+[node name="FloorRayPivot" type="Node3D" parent="Player/LedgeDetection"]
+
+[node name="FloorRayCast" type="RayCast3D" parent="Player/LedgeDetection/FloorRayPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4567413, 1.04322, 0)
+hit_back_faces = false
+
 [node name="JumpBuffer" type="Timer" parent="Player"]
 wait_time = 0.1
 one_shot = true
@@ -215,22 +231,6 @@ one_shot = true
 [node name="ShotgunCooldown" type="Timer" parent="Player"]
 wait_time = 0.5
 one_shot = true
-
-[node name="LedgeDetection" type="Node3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-script = ExtResource("11_dg77c")
-
-[node name="SpinningRayCast3D" type="RayCast3D" parent="Player/LedgeDetection"]
-target_position = Vector3(1, 0, 0)
-hit_back_faces = false
-script = ExtResource("11_efxa6")
-resolution = 8
-
-[node name="FloorRayPivot" type="Node3D" parent="Player/LedgeDetection"]
-
-[node name="FloorRayCast" type="RayCast3D" parent="Player/LedgeDetection/FloorRayPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.934848, 1.04322, 0)
-hit_back_faces = false
 
 [node name="DebugUI" type="Control" parent="."]
 layout_mode = 3
@@ -244,4 +244,5 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
+[connection signal="ledge_detected" from="Player/LedgeDetection" to="Player/StateMachine/Falling" method="_on_ledge_detection_ledge_detected"]
 [connection signal="collided" from="Player/LedgeDetection/SpinningRayCast3D" to="Player/LedgeDetection" method="_on_spinning_ray_cast_3d_collided"]
