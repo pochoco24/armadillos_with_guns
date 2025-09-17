@@ -12,8 +12,15 @@ config_version=5
 
 config/name="Demo Game"
 run/main_scene="uid://cdyng8lxh4ora"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[file_customization]
+
+folder_colors={
+"res://player/": "red",
+"res://utlilities/": "green"
+}
 
 [input]
 

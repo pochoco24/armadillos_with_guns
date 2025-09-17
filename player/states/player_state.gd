@@ -1,4 +1,4 @@
 class_name PlayerState
 extends State
 
-var player: CharacterBody3D
+@export var player: CharacterBody3D

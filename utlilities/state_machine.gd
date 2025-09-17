@@ -1,8 +1,10 @@
 class_name StateMachine
 extends Node
 
+@export var initial_state: State
+
 var states: Dictionary[String, State]
-@export var current_state: State
+var current_state: State
 
 
 func _ready() -> void:
@@ -10,6 +12,10 @@ func _ready() -> void:
 		if child is State:
 			states[child.name] = child
 			child.transitioned.connect(_on_state_transitioned)
+	
+	if initial_state:
+		initial_state.enter()
+		current_state = initial_state
 
 
 func _on_state_transitioned(new_state_name: String):

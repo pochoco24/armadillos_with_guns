@@ -1,18 +1,22 @@
-[gd_scene load_steps=24 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=28 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
-[ext_resource type="Script" uid="uid://cjnokk3bv3d2c" path="res://cam_pivot.gd" id="3_1bvp3"]
-[ext_resource type="Script" uid="uid://bq5t5v4jynd1h" path="res://player/ball.gd" id="3_h2yge"]
-[ext_resource type="Script" uid="uid://bt3ijvv8tokii" path="res://player/player_state_machine.gd" id="3_w48qg"]
+[ext_resource type="Script" uid="uid://cjnokk3bv3d2c" path="res://player/cam_pivot.gd" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://bq5t5v4jynd1h" path="res://player/ball_rigid_body.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://bhb5ov73j0yb7" path="res://utlilities/state_machine.gd" id="3_ycdy4"]
 [ext_resource type="Script" uid="uid://b46x2wbgv0s8s" path="res://player/states/idle.gd" id="4_7mycd"]
 [ext_resource type="Script" uid="uid://dtiwo1avy75s1" path="res://player/states/falling.gd" id="5_5vw27"]
 [ext_resource type="Script" uid="uid://qj43j33ouuei" path="res://player/states/jumping.gd" id="5_272bh"]
 [ext_resource type="Script" uid="uid://fbmqt1ut2sxi" path="res://player/states/run.gd" id="6_5vw27"]
-[ext_resource type="Script" uid="uid://xaghdmtee3di" path="res://player/player_state.gd" id="8_4c57u"]
+[ext_resource type="Script" uid="uid://xaghdmtee3di" path="res://player/states/player_state.gd" id="8_4c57u"]
+[ext_resource type="Script" uid="uid://dnk8b18dvrxgt" path="res://player/states/ball/ball_sub_state_machine.gd" id="8_w48qg"]
+[ext_resource type="Script" uid="uid://cv21ku1excwup" path="res://player/states/ball/rolling.gd" id="9_2cqfq"]
+[ext_resource type="Script" uid="uid://cl8gt4lexd38m" path="res://player/states/ball/jumping.gd" id="10_yaehf"]
+[ext_resource type="Script" uid="uid://bwfal6x03yuyj" path="res://player/states/ball/falling.gd" id="11_074og"]
 [ext_resource type="Script" uid="uid://bjgkpaqtq6enr" path="res://player/ledge_detection.gd" id="11_dg77c"]
 [ext_resource type="Script" uid="uid://cqmtmx618c1r7" path="res://player/spinning_ray_cast_3d.gd" id="11_efxa6"]
-[ext_resource type="Script" uid="uid://di2cld85wx5pl" path="res://debug_ui.gd" id="13_ycdy4"]
+[ext_resource type="Script" uid="uid://di2cld85wx5pl" path="res://utlilities/debug_ui.gd" id="13_ycdy4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -99,35 +103,60 @@ speed = 3.0
 shotgun_recoil = 20.0
 ball_shotgun_recoil = 25.0
 
-[node name="PlayerStateMachine" type="Node" parent="Player" node_paths=PackedStringArray("player", "current_state")]
-script = ExtResource("3_w48qg")
-player = NodePath("..")
-current_state = NodePath("Idle")
+[node name="StateMachine" type="Node" parent="Player" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_ycdy4")
+initial_state = NodePath("Idle")
 metadata/_custom_type_script = "uid://bhb5ov73j0yb7"
 
-[node name="Idle" type="Node" parent="Player/PlayerStateMachine"]
+[node name="Idle" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("4_7mycd")
+player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Jumping" type="Node" parent="Player/PlayerStateMachine"]
+[node name="Jumping" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("5_272bh")
 jump_speed = 10.0
+player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Falling" type="Node" parent="Player/PlayerStateMachine"]
+[node name="Falling" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("5_5vw27")
+player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Run" type="Node" parent="Player/PlayerStateMachine"]
+[node name="Run" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("6_5vw27")
+player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
-[node name="Ball" type="Node" parent="Player/PlayerStateMachine"]
-script = ExtResource("8_4c57u")
-metadata/_custom_type_script = "uid://xaghdmtee3di"
+[node name="Ball" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player", "ball")]
+script = ExtResource("8_w48qg")
+player = NodePath("../..")
+ball = NodePath("../../Ball")
+metadata/_custom_type_script = "uid://0hhu20p0073h"
 
-[node name="LedgeGrab" type="Node" parent="Player/PlayerStateMachine"]
+[node name="Rolling" type="Node" parent="Player/StateMachine/Ball" node_paths=PackedStringArray("ball", "player")]
+script = ExtResource("9_2cqfq")
+ball = NodePath("../../../Ball")
+player = NodePath("../../..")
+metadata/_custom_type_script = "uid://tskxb1lhmh3"
+
+[node name="Jumping" type="Node" parent="Player/StateMachine/Ball" node_paths=PackedStringArray("ball", "player")]
+script = ExtResource("10_yaehf")
+jump_speed = 15.0
+ball = NodePath("../../../Ball")
+player = NodePath("../../..")
+metadata/_custom_type_script = "uid://tskxb1lhmh3"
+
+[node name="Falling" type="Node" parent="Player/StateMachine/Ball" node_paths=PackedStringArray("ball", "player")]
+script = ExtResource("11_074og")
+ball = NodePath("../../../Ball")
+player = NodePath("../../..")
+metadata/_custom_type_script = "uid://tskxb1lhmh3"
+
+[node name="LedgeGrab" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("8_4c57u")
+player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="Mesh" type="MeshInstance3D" parent="Player"]
@@ -161,10 +190,11 @@ physics_material_override = SubResource("PhysicsMaterial_0xm2m")
 gravity_scale = 4.0
 freeze = true
 contact_monitor = true
-max_contacts_reported = 1
+max_contacts_reported = 5
 angular_damp = 1.0
 script = ExtResource("3_h2yge")
 max_floor_dot = 0.707
+acceleration = 15.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Ball"]
 shape = SubResource("SphereShape3D_h2yge")

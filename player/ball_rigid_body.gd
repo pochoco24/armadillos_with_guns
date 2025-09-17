@@ -1,6 +1,7 @@
 extends RigidBody3D
 
-@export var max_floor_dot : float
+@export var max_floor_dot: float
+@export var acceleration: float
 
 var on_floor := false
 
