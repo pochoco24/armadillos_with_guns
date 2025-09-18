@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 folder_colors={
 "res://images/": "yellow",
+"res://models/": "blue",
 "res://player/": "red",
 "res://utlilities/": "green"
 }
