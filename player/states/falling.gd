@@ -1,18 +1,5 @@
 extends BipedalState
 
-var enable_ledge_detection_signal = false
-
-# How far the character will be from the ledge while grabbing it
-@export var ledge_grab_distance: float
-
-
-func enter():
-	enable_ledge_detection_signal = true
-
-
-func exit():
-	enable_ledge_detection_signal = false
-
 
 func input_update(event: InputEvent):
 	if event.is_action_pressed("jump"):
@@ -34,9 +21,3 @@ func physics_update(delta: float):
 			change_state("Run")
 		else:
 			change_state("Idle")
-
-
-func _on_ledge_detection_ledge_detected(point: Vector3, normal: Vector3) -> void:
-	if enable_ledge_detection_signal:
-		player.rotation.y = normal.angle_to(Vector3.FORWARD)
-		change_state("LedgeGrab")

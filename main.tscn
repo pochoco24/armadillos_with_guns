@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=25 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
@@ -13,9 +13,6 @@
 [ext_resource type="Script" uid="uid://cv21ku1excwup" path="res://player/states/ball/rolling.gd" id="9_2cqfq"]
 [ext_resource type="Script" uid="uid://cl8gt4lexd38m" path="res://player/states/ball/jumping.gd" id="10_yaehf"]
 [ext_resource type="Script" uid="uid://bwfal6x03yuyj" path="res://player/states/ball/falling.gd" id="11_074og"]
-[ext_resource type="Script" uid="uid://bjgkpaqtq6enr" path="res://player/ledge_detection.gd" id="11_dg77c"]
-[ext_resource type="Script" uid="uid://cqmtmx618c1r7" path="res://player/spinning_ray_cast_3d.gd" id="11_efxa6"]
-[ext_resource type="Script" uid="uid://4su2t3tmg0nv" path="res://player/states/ledge_grab.gd" id="12_yaehf"]
 [ext_resource type="Script" uid="uid://di2cld85wx5pl" path="res://utlilities/debug_ui.gd" id="13_ycdy4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
@@ -121,7 +118,6 @@ metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="Falling" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("5_5vw27")
-ledge_grab_distance = 0.5
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://xaghdmtee3di"
 
@@ -154,11 +150,6 @@ script = ExtResource("11_074og")
 ball = NodePath("../../../Ball")
 player = NodePath("../../..")
 metadata/_custom_type_script = "uid://tskxb1lhmh3"
-
-[node name="LedgeGrab" type="Node" parent="Player/StateMachine" node_paths=PackedStringArray("player")]
-script = ExtResource("12_yaehf")
-player = NodePath("../..")
-metadata/_custom_type_script = "uid://xaghdmtee3di"
 
 [node name="Mesh" type="MeshInstance3D" parent="Player"]
 mesh = SubResource("CapsuleMesh_lquwl")
@@ -205,21 +196,6 @@ spring_length = 4.0
 
 [node name="Camera3D" type="Camera3D" parent="Player/CamPivot/SpringArm3D"]
 
-[node name="LedgeDetection" type="Node3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-script = ExtResource("11_dg77c")
-
-[node name="SpinningRayCast3D" type="RayCast3D" parent="Player/LedgeDetection"]
-target_position = Vector3(1.5, 0, 0)
-script = ExtResource("11_efxa6")
-resolution = 8
-
-[node name="FloorRayPivot" type="Node3D" parent="Player/LedgeDetection"]
-
-[node name="FloorRayCast" type="RayCast3D" parent="Player/LedgeDetection/FloorRayPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4567413, 1.04322, 0)
-hit_back_faces = false
-
 [node name="JumpBuffer" type="Timer" parent="Player"]
 wait_time = 0.1
 one_shot = true
@@ -243,6 +219,3 @@ script = ExtResource("13_ycdy4")
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
-
-[connection signal="ledge_detected" from="Player/LedgeDetection" to="Player/StateMachine/Falling" method="_on_ledge_detection_ledge_detected"]
-[connection signal="collided" from="Player/LedgeDetection/SpinningRayCast3D" to="Player/LedgeDetection" method="_on_spinning_ray_cast_3d_collided"]
