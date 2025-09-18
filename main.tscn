@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://cv21ku1excwup" path="res://player/states/ball/rolling.gd" id="9_2cqfq"]
 [ext_resource type="Script" uid="uid://cl8gt4lexd38m" path="res://player/states/ball/jumping.gd" id="10_yaehf"]
 [ext_resource type="Script" uid="uid://bwfal6x03yuyj" path="res://player/states/ball/falling.gd" id="11_074og"]
-[ext_resource type="Script" uid="uid://di2cld85wx5pl" path="res://utlilities/debug_ui.gd" id="13_ycdy4"]
+[ext_resource type="Texture2D" uid="uid://cad4qgl6l7656" path="res://images/crosshair.png" id="14_vivmo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -208,14 +208,25 @@ one_shot = true
 wait_time = 0.5
 one_shot = true
 
-[node name="DebugUI" type="Control" parent="."]
+[node name="UI" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("13_ycdy4")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Label" type="Label" parent="DebugUI"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="Crosshair" type="TextureRect" parent="UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_vivmo")
