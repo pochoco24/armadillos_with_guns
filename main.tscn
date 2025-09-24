@@ -1,7 +1,6 @@
-[gd_scene load_steps=25 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=24 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://bknrc7p4uhr7n" path="res://models/map.glb" id="1_vivmo"]
 [ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
 [ext_resource type="Script" uid="uid://cjnokk3bv3d2c" path="res://player/cam_pivot.gd" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://bq5t5v4jynd1h" path="res://player/ball_rigid_body.gd" id="3_h2yge"]
@@ -51,10 +50,6 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7mycd")
-
-[node name="Map" type="Node3D" parent="."]
-
-[node name="map" parent="Map" instance=ExtResource("1_vivmo")]
 
 [node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball", "mesh", "jump_buffer", "coyote_time", "shotgun_cooldown")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
