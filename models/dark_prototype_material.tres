@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://duvfgh6uu3343"]
+
+[ext_resource type="Texture2D" uid="uid://dryto53o5dyd5" path="res://images/kenney_prototype-textures/Dark/texture_08.png" id="1_bovdk"]
+
+[resource]
+albedo_texture = ExtResource("1_bovdk")
+metallic_specular = 0.0
+uv1_scale = Vector3(0.25, 0.25, 0.25)
+uv1_triplanar = true

@@ -1,6 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=26 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
+[ext_resource type="Material" uid="uid://duvfgh6uu3343" path="res://models/dark_prototype_material.tres" id="1_vivmo"]
+[ext_resource type="Material" uid="uid://dfwi7xxtkacbs" path="res://models/orange_prototype_material.tres" id="2_2cqfq"]
 [ext_resource type="Script" uid="uid://b56c0rb1dbxy0" path="res://player/player.gd" id="2_272bh"]
 [ext_resource type="Script" uid="uid://cjnokk3bv3d2c" path="res://player/cam_pivot.gd" id="3_1bvp3"]
 [ext_resource type="Script" uid="uid://bq5t5v4jynd1h" path="res://player/ball_rigid_body.gd" id="3_h2yge"]
@@ -50,6 +52,39 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7mycd")
+
+[node name="Level" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.75, 0)
+use_collision = true
+size = Vector3(28.5, 3.5, 20)
+material = ExtResource("1_vivmo")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, -1.75, 29.75)
+use_collision = true
+size = Vector3(28.5, 3.5, 56.5)
+material = ExtResource("1_vivmo")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60.5, -11.25, 74.75)
+use_collision = true
+size = Vector3(144.5, 12.5, 121.5)
+material = ExtResource("1_vivmo")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 63.75, 1.25, 83.75)
+material_override = ExtResource("2_2cqfq")
+use_collision = true
+size = Vector3(17, 12.5, 17.5)
+material = ExtResource("1_vivmo")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.5, -1.75, -8.75)
+use_collision = true
+size = Vector3(28.5, 3.5, 2.5)
+material = ExtResource("1_vivmo")
 
 [node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball", "mesh", "jump_buffer", "coyote_time", "shotgun_cooldown")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
@@ -135,6 +170,7 @@ collision_mask = 0
 physics_material_override = SubResource("PhysicsMaterial_0xm2m")
 gravity_scale = 4.0
 freeze = true
+continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 5
 angular_damp = 1.0
@@ -178,6 +214,7 @@ wait_time = 0.5
 one_shot = true
 
 [node name="UI" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
