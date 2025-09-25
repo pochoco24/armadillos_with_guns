@@ -4,11 +4,11 @@ extends SubStateMachine
 @export var ball: RigidBody3D
 
 
-func input_update(event: InputEvent) -> void:
-	if event.is_action_released("ball_mode"):
-		change_state("Falling")
-	else:
-		super(event)
+#func input_update(event: InputEvent) -> void:
+	#if event.is_action_released("ball_mode"):
+		#change_state("Falling")
+	#else:
+		#super(event)
 
 
 func enter():
