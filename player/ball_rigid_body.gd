@@ -8,34 +8,32 @@ extends RigidBody3D
 @export var max_floor_dot: float
 @export var acceleration: float
 @export_range(0.0, 1.0) var wall_bounce: float 
+@export var velocity_cast: ShapeCast3D
 
 var on_floor := false
-var prev_linear_velocity: Vector3
-var prev_angular_velocity: Vector3
-var speeds_buffer := []
-var speeds_buffer_limit: int = 3
+
+
+func _physics_process(delta: float) -> void:
+	# Use a shape cast to detect wall collision BEFORE the collision happens
+	# so BOUNCE gets set right on time
+	
+	velocity_cast.target_position = linear_velocity * delta
+	velocity_cast.position = position
+	velocity_cast.force_update_transform()
+	velocity_cast.force_shapecast_update()
+	
+	if velocity_cast.is_colliding():
+		if Vector3.UP.dot(velocity_cast.get_collision_normal(0)) < max_floor_dot:
+			physics_material_override.bounce = wall_bounce
+		else:
+			physics_material_override.bounce = 0.0
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	on_floor = false
-	
-	speeds_buffer.append(state.linear_velocity.length())
-	if speeds_buffer.size() > speeds_buffer_limit:
-		speeds_buffer.remove_at(0)
 	
 	for i in get_contact_count():
 		var normal = state.get_contact_local_normal(i)
 		
 		if Vector3.UP.dot(normal) > max_floor_dot: # Collided with floor
 			on_floor = true
-			
-		else: # Collided with wall or ceiling
-			var prev_velocity_dir = prev_linear_velocity.normalized()
-			if prev_velocity_dir.dot(normal) < 0.0:
-				# Ensure to bounce at full velocity of impact
-				prev_velocity_dir *= speeds_buffer.max()
-				state.linear_velocity = prev_velocity_dir.bounce(normal) * wall_bounce
-				state.angular_velocity = prev_angular_velocity
-	
-	prev_linear_velocity = state.linear_velocity
-	prev_angular_velocity = state.angular_velocity

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=27 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
 [ext_resource type="Material" uid="uid://duvfgh6uu3343" path="res://models/dark_prototype_material.tres" id="1_vivmo"]
@@ -42,6 +42,8 @@ glow_enabled = true
 albedo_texture = ExtResource("1_0xm2m")
 
 [sub_resource type="SphereMesh" id="SphereMesh_1bvp3"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2cqfq"]
 
 [node name="Node3D" type="Node3D"]
 
@@ -167,7 +169,7 @@ mesh = SubResource("CapsuleMesh_lquwl")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape3D_7mycd")
 
-[node name="Ball" type="RigidBody3D" parent="Player"]
+[node name="Ball" type="RigidBody3D" parent="Player" node_paths=PackedStringArray("velocity_cast")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 3.44522)
 top_level = true
 visible = false
@@ -184,6 +186,7 @@ script = ExtResource("3_h2yge")
 max_floor_dot = 0.707
 acceleration = 20.0
 wall_bounce = 0.9
+velocity_cast = NodePath("ShapeCast3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Ball"]
 shape = SubResource("SphereShape3D_h2yge")
@@ -192,6 +195,12 @@ shape = SubResource("SphereShape3D_h2yge")
 material_override = SubResource("StandardMaterial3D_0xm2m")
 mesh = SubResource("SphereMesh_1bvp3")
 skeleton = NodePath("")
+
+[node name="ShapeCast3D" type="ShapeCast3D" parent="Player/Ball"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 3.44522)
+top_level = true
+shape = SubResource("SphereShape3D_2cqfq")
+target_position = Vector3(0, 0, 0)
 
 [node name="CamPivot" type="Node3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
