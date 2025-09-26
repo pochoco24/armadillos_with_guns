@@ -51,4 +51,8 @@ func exit():
 	player.position = ball.position
 	player.velocity = ball.linear_velocity
 	
+	player.rotation.y = (
+			-Vector2(ball.linear_velocity.x, ball.linear_velocity.z).angle() + PI/2.0
+	)
+	
 	player.cam_pivot.change_fov(player.cam_pivot.default_fov)

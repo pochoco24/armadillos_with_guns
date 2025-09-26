@@ -1,6 +1,10 @@
 extends BipedalState
 
 
+func enter():
+	player.anim.play("Falling")
+
+
 func input_update(event: InputEvent):
 	if event.is_action_pressed("jump"):
 		if not player.coyote_time.is_stopped():

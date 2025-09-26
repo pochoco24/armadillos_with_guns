@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=28 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
 [ext_resource type="Material" uid="uid://duvfgh6uu3343" path="res://models/dark_prototype_material.tres" id="1_vivmo"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://cv21ku1excwup" path="res://player/states/ball/rolling.gd" id="9_2cqfq"]
 [ext_resource type="Script" uid="uid://cl8gt4lexd38m" path="res://player/states/ball/jumping.gd" id="10_yaehf"]
 [ext_resource type="Script" uid="uid://bwfal6x03yuyj" path="res://player/states/ball/falling.gd" id="11_074og"]
+[ext_resource type="PackedScene" uid="uid://bp33y0d6141ng" path="res://models/armadillo/armadillo.glb" id="13_yaehf"]
 [ext_resource type="Texture2D" uid="uid://cad4qgl6l7656" path="res://images/crosshair.png" id="14_vivmo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
@@ -94,7 +95,7 @@ use_collision = true
 size = Vector3(28.5, 3.5, 2.5)
 material = ExtResource("1_vivmo")
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball", "mesh", "jump_buffer", "coyote_time", "shotgun_cooldown")]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball", "mesh", "anim", "jump_buffer", "coyote_time", "shotgun_cooldown")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
 top_level = true
 collision_mask = 3
@@ -102,13 +103,15 @@ floor_constant_speed = true
 script = ExtResource("2_272bh")
 cam_pivot = NodePath("CamPivot")
 ball = NodePath("Ball")
-mesh = NodePath("Mesh")
+mesh = NodePath("ArmadilloMesh")
+anim = NodePath("ArmadilloMesh/AnimationPlayer")
 jump_buffer = NodePath("JumpBuffer")
 coyote_time = NodePath("CoyoteTime")
 shotgun_cooldown = NodePath("ShotgunCooldown")
 gravity = 0.5
 acceleration = 1.0
-speed = 3.0
+speed = 13.0
+rotation_speed = 0.1
 shotgun_recoil = 20.0
 ball_shotgun_recoil = 25.0
 
@@ -163,7 +166,44 @@ ball = NodePath("../../../Ball")
 player = NodePath("../../..")
 metadata/_custom_type_script = "uid://tskxb1lhmh3"
 
-[node name="Mesh" type="MeshInstance3D" parent="Player"]
+[node name="ArmadilloMesh" parent="Player" instance=ExtResource("13_yaehf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0.5)
+
+[node name="Skeleton3D" parent="Player/ArmadilloMesh/Armadillo" index="0"]
+bones/0/position = Vector3(-6.5750387e-06, 0.33860078, -0.3107535)
+bones/0/rotation = Quaternion(0.18537235, -3.0497243e-17, -2.3332297e-17, 0.98266834)
+bones/1/rotation = Quaternion(0.5913139, -4.4477753e-07, -1.6680732e-06, 0.8064415)
+bones/3/rotation = Quaternion(0.96442, 0.13062422, -0.0053399443, -0.22978862)
+bones/4/rotation = Quaternion(0.9644201, -0.13062416, 0.005339458, -0.22978838)
+bones/5/rotation = Quaternion(0.6114805, 0.09490864, 0.24203095, 0.747332)
+bones/6/position = Vector3(-0.061809175, 0.4039073, 0.0033580044)
+bones/6/rotation = Quaternion(0.060663167, -0.00073408295, -0.012086662, 0.99808484)
+bones/7/position = Vector3(0.0549029, 0.39834544, 0.0007370203)
+bones/7/rotation = Quaternion(0.15470196, 0.0011834052, 0.0075531676, 0.98793167)
+bones/8/rotation = Quaternion(-0.25855905, 0.7122804, 0.6389294, -0.13256378)
+bones/9/position = Vector3(0.06181024, 0.4038701, 0.0024395732)
+bones/9/rotation = Quaternion(-0.5011579, -0.006069423, 0.010478023, 0.8652712)
+bones/10/position = Vector3(-0.054908693, 0.39795837, 0.0042375913)
+bones/10/rotation = Quaternion(-0.5044537, 0.0038562422, -0.006601513, 0.8634049)
+bones/11/rotation = Quaternion(-0.6895405, -0.14783143, 0.6935996, 0.14696729)
+bones/12/rotation = Quaternion(0.55965954, 0.00062207476, 0.005933832, 0.82870114)
+bones/13/rotation = Quaternion(0.86749023, 0.002580665, -0.004500558, 0.49742717)
+bones/14/rotation = Quaternion(0.5596595, -0.00061118766, -0.0059394245, 0.8287012)
+bones/15/rotation = Quaternion(0.8674903, -0.0025806641, 0.0045005595, 0.497427)
+bones/16/position = Vector3(0.3433562, -0.09401721, -0.54235965)
+bones/17/position = Vector3(-0.3433562, -0.09401719, -0.54235965)
+
+[node name="head" parent="Player/ArmadilloMesh/Armadillo/Skeleton3D" index="0"]
+transform = Transform3D(1, 2.1644005e-06, -2.6900839e-06, -2.5380195e-06, -0.06742826, -0.997724, -2.340862e-06, 0.997724, -0.06742826, -6.5750387e-06, 1.5588707, 0.16662213)
+
+[node name="body" parent="Player/ArmadilloMesh/Armadillo/Skeleton3D" index="1"]
+transform = Transform3D(1, 3.4549124e-17, -6.8587666e-17, -5.716251e-17, 0.9312741, -0.36431906, 5.1287024e-17, 0.36431906, 0.9312741, -6.5750387e-06, 0.33860078, -0.3107535)
+
+[node name="Shotgun" parent="Player/ArmadilloMesh/Armadillo/Skeleton3D/body" index="0"]
+transform = Transform3D(-0.04441717, -0.021338359, -0.09702656, 0.019540131, 0.08421145, -0.041757055, 0.079155214, -0.03276211, -0.044137407, -0.172623, 0.85817254, 0.4885416)
+
+[node name="CapsuleMesh" type="MeshInstance3D" parent="Player"]
+visible = false
 mesh = SubResource("CapsuleMesh_lquwl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
@@ -252,3 +292,5 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("14_vivmo")
+
+[editable path="Player/ArmadilloMesh"]

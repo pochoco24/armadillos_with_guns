@@ -1,6 +1,10 @@
 extends BipedalState
 
 
+func enter():
+	player.anim.play("Run")
+
+
 func input_update(event: InputEvent) -> void:
 	if Input.get_vector("left", "right", "up", "down") == Vector2.ZERO:
 		change_state("Idle")

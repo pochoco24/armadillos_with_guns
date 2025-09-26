@@ -2,7 +2,8 @@ extends CharacterBody3D
 
 @export var cam_pivot: Node3D
 @export var ball: RigidBody3D
-@export var mesh: MeshInstance3D
+@export var mesh: Node3D
+@export var anim: AnimationPlayer
 @export var jump_buffer: Timer
 @export var coyote_time: Timer
 @export var shotgun_cooldown: Timer
@@ -10,6 +11,7 @@ extends CharacterBody3D
 @export var gravity: float = 0.1
 @export var acceleration: float = 0.1
 @export var speed: float = 0.5
+@export var rotation_speed: float = 0.5
 
 @export var shotgun_recoil: float = 10.0
 @export var ball_shotgun_recoil: float = 10.0

@@ -7,6 +7,8 @@ func enter():
 	player.velocity.y = jump_speed
 	player.jump_buffer.stop()
 	player.coyote_time.stop()
+	
+	player.anim.play("Jumping")
 
 
 func physics_update(delta: float):

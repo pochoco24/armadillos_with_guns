@@ -13,6 +13,11 @@ func physics_update(delta: float):
 	# Rotate with camera
 	var input_dir_world = input_dir.rotated(-player.cam_pivot.rotation.y)
 	
+	# Rotate character to input direction
+	if input_dir_world != Vector2.ZERO:
+		player.rotation.y = lerp_angle(
+				player.rotation.y, -input_dir_world.angle() + PI/2.0, player.rotation_speed)
+	
 	var velocity_flat = Vector2(player.velocity.x, player.velocity.z)
 	
 	velocity_flat = velocity_flat.move_toward(
