@@ -19,8 +19,12 @@
 [ext_resource type="Texture2D" uid="uid://cad4qgl6l7656" path="res://images/crosshair.png" id="14_vivmo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+sky_top_color = Color(0.3125, 0.61805606, 1, 1)
+sky_horizon_color = Color(0.609375, 0.8060534, 1, 1)
+sky_curve = 0.9415004
+ground_bottom_color = Color(0.64453125, 0.8750305, 1, 1)
+ground_horizon_color = Color(0.60784316, 0.80784315, 1, 1)
+ground_curve = 0.12996036
 
 [sub_resource type="Sky" id="Sky_lquwl"]
 sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
@@ -28,8 +32,8 @@ sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
 [sub_resource type="Environment" id="Environment_7mycd"]
 background_mode = 2
 sky = SubResource("Sky_lquwl")
-tonemap_mode = 2
-glow_enabled = true
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_lquwl"]
 
@@ -168,9 +172,6 @@ metadata/_custom_type_script = "uid://tskxb1lhmh3"
 
 [node name="ArmadilloMesh" parent="Player" instance=ExtResource("13_yaehf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0.5)
-
-[node name="Shotgun" parent="Player/ArmadilloMesh/Armadillo/Skeleton3D/body" index="0"]
-transform = Transform3D(-0.04441717, -0.021338359, -0.09702656, 0.019540131, 0.08421145, -0.041757055, 0.079155214, -0.03276211, -0.044137407, -0.172623, 0.85817254, 0.4885416)
 
 [node name="CapsuleMesh" type="MeshInstance3D" parent="Player"]
 visible = false
