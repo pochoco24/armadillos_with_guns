@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cdyng8lxh4ora"]
+[gd_scene load_steps=33 format=3 uid="uid://cdyng8lxh4ora"]
 
 [ext_resource type="Texture2D" uid="uid://cjsigc2r52b5f" path="res://icon.svg" id="1_0xm2m"]
 [ext_resource type="Material" uid="uid://duvfgh6uu3343" path="res://models/dark_prototype_material.tres" id="1_vivmo"]
@@ -35,6 +35,35 @@ sky = SubResource("Sky_lquwl")
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yaehf"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.21176471)
+
+[sub_resource type="Curve" id="Curve_yaehf"]
+_data = [Vector2(0, 0), 0.0, 4.373034, 0, 0, Vector2(0.48920864, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -4.226041, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_074og"]
+curve = SubResource("Curve_yaehf")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yaehf"]
+emission_shape_scale = Vector3(1, 0.065, 0.49)
+emission_shape = 1
+emission_sphere_radius = 0.62
+direction = Vector3(0, 1, 0)
+spread = 51.65
+initial_velocity_min = -0.01
+initial_velocity_max = 7.0099998
+gravity = Vector3(0, 0, 0)
+scale_min = 0.19
+scale_max = 0.61
+scale_curve = SubResource("CurveTexture_074og")
+
+[sub_resource type="SphereMesh" id="SphereMesh_074og"]
+radial_segments = 32
+rings = 16
+
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_lquwl"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7mycd"]
@@ -50,16 +79,16 @@ albedo_texture = ExtResource("1_0xm2m")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_2cqfq"]
 
-[node name="Node3D" type="Node3D"]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
-shadow_enabled = true
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_7mycd")
+[node name="Main" type="Node3D"]
 
 [node name="Level" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Level"]
+transform = Transform3D(-0.86602354, -0.43301603, 0.25000072, 0, 0.49999818, 0.86602646, -0.5000033, 0.7499993, -0.4330102, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Level"]
+environment = SubResource("Environment_7mycd")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.25, -1.75, -42)
@@ -99,8 +128,8 @@ use_collision = true
 size = Vector3(28.5, 3.5, 2.5)
 material = ExtResource("1_vivmo")
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball", "mesh", "anim", "jump_buffer", "coyote_time", "shotgun_cooldown")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 0)
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("cam_pivot", "ball", "mesh", "anim", "jump_buffer", "coyote_time", "shotgun_cooldown", "dust_particles")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.06458, 0)
 top_level = true
 collision_mask = 3
 floor_constant_speed = true
@@ -112,12 +141,14 @@ anim = NodePath("ArmadilloMesh/AnimationPlayer")
 jump_buffer = NodePath("JumpBuffer")
 coyote_time = NodePath("CoyoteTime")
 shotgun_cooldown = NodePath("ShotgunCooldown")
+dust_particles = NodePath("DustParticles")
 gravity = 0.5
 acceleration = 1.0
 speed = 13.0
 rotation_speed = 0.1
 shotgun_recoil = 20.0
 ball_shotgun_recoil = 25.0
+min_speed_for_dust = 10.0
 
 [node name="StateMachine" type="Node" parent="Player" node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_ycdy4")
@@ -173,6 +204,14 @@ metadata/_custom_type_script = "uid://tskxb1lhmh3"
 [node name="ArmadilloMesh" parent="Player" instance=ExtResource("13_yaehf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0.5)
 
+[node name="DustParticles" type="GPUParticles3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+material_override = SubResource("StandardMaterial3D_yaehf")
+emitting = false
+lifetime = 0.1
+process_material = SubResource("ParticleProcessMaterial_yaehf")
+draw_pass_1 = SubResource("SphereMesh_074og")
+
 [node name="CapsuleMesh" type="MeshInstance3D" parent="Player"]
 visible = false
 mesh = SubResource("CapsuleMesh_lquwl")
@@ -181,7 +220,7 @@ mesh = SubResource("CapsuleMesh_lquwl")
 shape = SubResource("CapsuleShape3D_7mycd")
 
 [node name="Ball" type="RigidBody3D" parent="Player" node_paths=PackedStringArray("velocity_cast")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.06458, 3.44522)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.065, 0)
 top_level = true
 visible = false
 collision_layer = 0

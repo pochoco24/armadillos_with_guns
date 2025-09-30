@@ -23,6 +23,11 @@ func physics_update(delta: float):
 	velocity_flat = velocity_flat.move_toward(
 			input_dir_world * player.speed, player.acceleration)
 	
+	player.dust_particles.emitting = (
+			velocity_flat.length() > player.min_speed_for_dust
+			and player.is_on_floor()
+	)
+	
 	player.velocity.x = velocity_flat.x
 	player.velocity.z = velocity_flat.y
 	

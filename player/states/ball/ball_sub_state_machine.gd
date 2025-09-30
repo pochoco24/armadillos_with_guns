@@ -11,6 +11,17 @@ func input_update(event: InputEvent) -> void:
 		super(event)
 
 
+func physics_update(delta: float) -> void:
+	super(delta)
+	
+	var velocity_flat = Vector2(ball.linear_velocity.x, ball.linear_velocity.z)
+	
+	player.dust_particles.emitting = (
+			velocity_flat.length() > player.min_speed_for_dust
+			and ball.on_floor
+	)
+
+
 func enter():
 	super()
 	
@@ -32,6 +43,9 @@ func enter():
 	
 	ball.on_floor = false
 	set_substate("Falling")
+	
+	# Place particles right under ball
+	player.dust_particles.position.y = -0.5
 
 
 func exit():
@@ -56,3 +70,6 @@ func exit():
 	)
 	
 	player.cam_pivot.change_fov(player.cam_pivot.default_fov)
+	
+	# Place particles right player
+	player.dust_particles.position.y = -1

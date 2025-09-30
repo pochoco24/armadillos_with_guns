@@ -7,6 +7,7 @@ extends CharacterBody3D
 @export var jump_buffer: Timer
 @export var coyote_time: Timer
 @export var shotgun_cooldown: Timer
+@export var dust_particles: GPUParticles3D
 
 @export var gravity: float = 0.1
 @export var acceleration: float = 0.1
@@ -15,6 +16,9 @@ extends CharacterBody3D
 
 @export var shotgun_recoil: float = 10.0
 @export var ball_shotgun_recoil: float = 10.0
+
+## Minimum velocity required to show dust particles
+@export var min_speed_for_dust: float
 
 
 func _ready() -> void:
